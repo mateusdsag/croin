@@ -7,28 +7,299 @@ IMPORTS
 /* ===================================
 CSS VARIABLES - FLAT DARK
 =================================== */
+/* ===================================
+ULTRA DARK FINTECH THEME (BINANCE STYLE)
+=================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-    /* Cores de Fundo */
-    --bg:        #1e222a;
-    --bg-card:   #232830;
-    --bg-deep:   #191c23;
-    
-    /* Cores de Destaque */
-    --accent:    #64b5f6;
-    --accent2:   #42a5f5;
-    --green:     #69f0ae;
-    --red:       #ff7474;
-    --yellow:    #ffd54f;
-    
-    /* Textos e Bordas */
-    --text:      #e2e8f0;
-    --muted:     #8a94a6;
-    --border:    rgba(255, 255, 255, 0.08); /* Borda levemente mais visível para separar elementos */
-    --radius:    20px;
+
+    /* ===== BACKGROUND (ULTRA BLACK) ===== */
+    --bg:        #0a0b0d;   /* fundo principal (quase preto puro) */
+    --bg-card:   #111317;   /* cards */
+    --bg-deep:   #07080a;   /* profundidade */
+
+    /* ===== ACCENTS (FINTECH STYLE) ===== */
+    --accent:    #3b82f6;   /* azul trading */
+    --accent2:   #2563eb;
+
+    --green:     #22c55e;
+    --red:       #ef4444;
+    --yellow:    #fbbf24;
+
+    /* ===== TEXT ===== */
+    --text:      #e5e7eb;
+    --muted:     #8b94a7;
+
+    --border:    rgba(255,255,255,0.06);
+
+    --radius:    18px;
     --sidebar-w: 260px;
-    --font-head: 'Syne', sans-serif;
-    --font-body: 'Space Grotesk', sans-serif;
+
+    /* ===== TYPOGRAPHY ===== */
+    --font-head: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* ===== ANIMATION ===== */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===================================
+GLOBAL RESET (SMOOTHER)
+=================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* LINKS */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ===================================
+SCROLLBAR (MINIMAL)
+=================================== */
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(59,130,246,0.25);
+    border-radius: 999px;
+}
+
+/* ===================================
+SMOOTH ANIMATIONS BASE
+=================================== */
+
+* {
+    transition: background 0.25s var(--ease),
+                border-color 0.25s var(--ease),
+                transform 0.25s var(--ease),
+                opacity 0.25s var(--ease);
+}
+
+/* ===================================
+CARD BASE (CONSISTENCY)
+=================================== */
+
+.neo,
+.crypto-card,
+.movers-card,
+.trading-card,
+.portfolio-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+}
+
+/* hover premium */
+.crypto-card:hover,
+.movers-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(59,130,246,0.35);
+}
+
+/* ===================================
+TEXT STYLE IMPROVEMENTS
+=================================== */
+
+h1,h2,h3 {
+    font-family: var(--font-head);
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ===================================
+BUTTONS (SOFT FINTECH)
+=================================== */
+
+button {
+    font-family: var(--font-body);
+    transition: all 0.2s var(--ease);
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* ===================================
+SIDEBAR (DARKER + CLEAN)
+=================================== */
+
+.sidebar {
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+}
+
+.menu-item {
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.menu-item:hover {
+    background: rgba(59,130,246,0.06);
+}
+
+/* active state mais clean */
+.menu-item.active {
+    background: rgba(59,130,246,0.12);
+    color: var(--accent);
+}
+
+/* ===================================
+TOPBAR CLEAN FINTECH LOOK
+=================================== */
+
+.topbar {
+    backdrop-filter: blur(10px);
+}
+
+/* ===================================
+SEARCH (BINANCE STYLE)
+=================================== */
+
+.search-box input {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+}
+
+.search-box input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+}
+
+/* ===================================
+LIVE BADGE (SUBTLE)
+=================================== */
+
+.live-badge {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.15);
+}
+
+/* blink mais suave */
+@keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ===================================
+CRYPTO CARDS (BINANCE STYLE)
+=================================== */
+
+.crypto-card::before {
+    background: radial-gradient(circle at top left,
+        rgba(59,130,246,0.08),
+        transparent 60%);
+    opacity: 0;
+}
+
+.crypto-card:hover::before {
+    opacity: 1;
+}
+
+/* preço mais “clean terminal” */
+.coin-price {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* ===================================
+FADES MAIS SUAVES
+=================================== */
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+MODAL (SOFT DARK GLASS)
+=================================== */
+
+.portfolio-modal {
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+}
+
+.portfolio-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+}
+
+/* ===================================
+INPUTS MODERN
+=================================== */
+
+input {
+    transition: all 0.25s var(--ease);
+}
+
+input:focus {
+    outline: none;
+}
+
+/* ===================================
+HOVER GLOBAL CONSISTENCY
+=================================== */
+
+.mover-item:hover {
+    background: rgba(59,130,246,0.05);
+    border-color: rgba(59,130,246,0.2);
+}
+
+/* ===================================
+MOBILE POLISH
+=================================== */
+
+@media (max-width: 768px) {
+    .sidebar {
+        backdrop-filter: blur(10px);
+    }
+
+    .crypto-card:hover {
+        transform: none;
+    }
 }
 
 /* ===================================
@@ -113,7 +384,7 @@ LOADER
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    transition: opacity 0.6s ease, visibility 0.2s;
+    transition: opacity 0.3s ease, visibility 0.1s;
 }
 
 #loader.hidden {
