@@ -1,8 +1,8 @@
 <?php
 
-session_start();
 
-if(isset($_SESSION['user'])){
+
+if (isset($_SESSION['user'])) {
     header("Location: ?page=dashboard");
     exit;
 }
@@ -11,21 +11,21 @@ require_once "../config/database.php";
 
 $error = '';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $database = new Database();
     $db = $database->connect();
 
-    if(!$db){
+    if (!$db) {
         $error = 'Erro de conexão com o banco de dados.';
     } else {
 
         $email    = trim(filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL));
         $password = $_POST['password'] ?? '';
 
-        if(empty($email) || empty($password)){
+        if (empty($email) || empty($password)) {
             $error = 'Preencha todos os campos.';
-        } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Email inválido.';
         } else {
 
@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if($user && password_verify($password, $user['password'])){
+            if ($user && password_verify($password, $user['password'])) {
                 session_regenerate_id(true);
                 $_SESSION['user'] = [
                     'id'    => $user['id'],
@@ -52,6 +52,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +60,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
+
 <body class="auth-page">
 
     <div class="auth-card">
@@ -66,8 +68,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         <h1 class="auth-logo">CROIN</h1>
         <p class="auth-tagline">Plataforma de Monitoramento Cripto</p>
 
-        <?php if(!empty($error)): ?>
-        <div class="auth-error"><?= htmlspecialchars($error) ?></div>
+        <?php if (!empty($error)): ?>
+            <div class="auth-error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <form method="POST" autocomplete="on">
@@ -80,8 +82,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 required
                 placeholder="seu@email.com"
                 value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                autocomplete="email"
-            >
+                autocomplete="email">
 
             <label class="auth-label" for="password">Senha</label>
             <input
@@ -91,8 +92,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 name="password"
                 required
                 placeholder="••••••••"
-                autocomplete="current-password"
-            >
+                autocomplete="current-password">
 
             <button type="submit" class="auth-btn">Entrar</button>
         </form>
@@ -105,4 +105,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     </div>
 
 </body>
+
 </html>
