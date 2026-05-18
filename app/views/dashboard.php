@@ -234,7 +234,7 @@ $userAvatar = strtoupper(
     <!-- COIN GRID -->
     <section class="section-header">
         <h2 class="section-title">Mercado — Top 20</h2>
-        <span class="live-badge" id="lastUpdate" style="font-size:11px;color:var(--muted);">Atualiza a cada 15s</span>
+        <span class="live-badge" id="lastUpdate" style="font-size:11px;color:var(--muted);">Atualiza a cada 5s</span>
     </section>
 
     <section class="coin-grid" id="coinGrid">

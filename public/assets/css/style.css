@@ -5,25 +5,26 @@ IMPORTS
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
 
 /* ===================================
-CSS VARIABLES - NEOMORPHISM DARK
+CSS VARIABLES - FLAT DARK
 =================================== */
 
 :root {
-    --bg:        #0d1117;
-    --bg-card:   #131920;
-    --bg-deep:   #090d12;
-    --neo-shadow-dark:   rgba(0,0,0,0.6);
-    --neo-shadow-light:  rgba(255,255,255,0.04);
-    --neo-inset-dark:    rgba(0,0,0,0.5);
-    --neo-inset-light:   rgba(255,255,255,0.03);
-    --accent:    #00d4ff;
-    --accent2:   #0099cc;
-    --green:     #00e676;
-    --red:       #ff4444;
-    --yellow:    #ffd600;
+    /* Cores de Fundo */
+    --bg:        #1e222a;
+    --bg-card:   #232830;
+    --bg-deep:   #191c23;
+    
+    /* Cores de Destaque */
+    --accent:    #64b5f6;
+    --accent2:   #42a5f5;
+    --green:     #69f0ae;
+    --red:       #ff7474;
+    --yellow:    #ffd54f;
+    
+    /* Textos e Bordas */
     --text:      #e2e8f0;
-    --muted:     #4a5568;
-    --border:    rgba(255,255,255,0.05);
+    --muted:     #8a94a6;
+    --border:    rgba(255, 255, 255, 0.08); /* Borda levemente mais visível para separar elementos */
     --radius:    20px;
     --sidebar-w: 260px;
     --font-head: 'Syne', sans-serif;
@@ -60,55 +61,44 @@ SCROLLBAR
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
 ::-webkit-scrollbar-thumb {
-    background: rgba(0,212,255,0.3);
+    background: rgba(100, 181, 246, 0.3);
     border-radius: 999px;
 }
 
 /* ===================================
-NEOMORPHISM UTILS
+UTILITIES (Adaptados para Flat)
 =================================== */
 
 .neo {
     background: var(--bg-card);
     border-radius: var(--radius);
-    box-shadow:
-        6px 6px 14px var(--neo-shadow-dark),
-        -3px -3px 10px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .neo-inset {
     background: var(--bg-deep);
     border-radius: calc(var(--radius) - 4px);
-    box-shadow:
-        inset 4px 4px 10px var(--neo-inset-dark),
-        inset -2px -2px 6px var(--neo-inset-light);
+    border: 1px solid var(--border);
 }
 
 .neo-btn {
     background: var(--bg-card);
     border-radius: 14px;
-    box-shadow:
-        4px 4px 10px var(--neo-shadow-dark),
-        -2px -2px 6px var(--neo-shadow-light);
+    border: 1px solid var(--border);
     cursor: pointer;
-    transition: all 0.2s;
-    border: none;
+    transition: all 0.3s ease;
     color: var(--text);
     font-family: var(--font-body);
 }
 
 .neo-btn:hover {
-    box-shadow:
-        2px 2px 6px var(--neo-shadow-dark),
-        -1px -1px 3px var(--neo-shadow-light);
-    transform: translateY(1px);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
 }
 
 .neo-btn:active {
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light);
-    transform: translateY(2px);
+    background: var(--bg-deep);
+    transform: translateY(1px);
 }
 
 /* ===================================
@@ -123,7 +113,7 @@ LOADER
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    transition: opacity 0.5s, visibility 0.5s;
+    transition: opacity 0.6s ease, visibility 0.2s;
 }
 
 #loader.hidden {
@@ -145,22 +135,21 @@ LOADER
     font-weight: 800;
     color: var(--accent);
     letter-spacing: 6px;
-    text-shadow: 0 0 40px rgba(0,212,255,0.5);
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; text-shadow: 0 0 40px rgba(0,212,255,0.5); }
-    50% { opacity: 0.6; text-shadow: 0 0 20px rgba(0,212,255,0.2); }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 .loader-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(0,212,255,0.15);
+    border: 3px solid rgba(100, 181, 246, 0.15);
     border-top-color: var(--accent);
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -183,15 +172,13 @@ SIDEBAR
     width: var(--sidebar-w);
     height: 100vh;
     background: var(--bg-card);
-    box-shadow:
-        6px 0 20px rgba(0,0,0,0.4),
-        inset -1px 0 0 var(--border);
+    border-right: 1px solid var(--border);
     padding: 32px 18px;
     z-index: 999;
     display: flex;
     flex-direction: column;
     gap: 0;
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 
 .logo-area {
@@ -206,7 +193,6 @@ SIDEBAR
     font-weight: 800;
     color: var(--accent);
     letter-spacing: 4px;
-    text-shadow: 0 0 20px rgba(0,212,255,0.4);
 }
 
 .logo-sub {
@@ -233,7 +219,7 @@ nav {
     color: var(--muted);
     font-size: 15px;
     font-weight: 500;
-    transition: all 0.25s;
+    transition: all 0.3s ease;
     position: relative;
 }
 
@@ -244,19 +230,13 @@ nav {
 }
 
 .menu-item:hover {
-    background: rgba(0,212,255,0.06);
+    background: rgba(100, 181, 246, 0.04);
     color: var(--text);
-    box-shadow:
-        3px 3px 8px var(--neo-shadow-dark),
-        -1px -1px 4px var(--neo-shadow-light);
 }
 
 .menu-item.active {
-    background: rgba(0,212,255,0.1);
+    background: rgba(100, 181, 246, 0.08);
     color: var(--accent);
-    box-shadow:
-        3px 3px 8px var(--neo-shadow-dark),
-        -1px -1px 4px var(--neo-shadow-light);
 }
 
 .menu-item.active::before {
@@ -268,17 +248,16 @@ nav {
     width: 3px;
     background: var(--accent);
     border-radius: 0 3px 3px 0;
-    box-shadow: 0 0 8px var(--accent);
 }
 
 .menu-logout {
-    color: rgba(255,68,68,0.7);
+    color: rgba(255, 116, 116, 0.7);
     margin-top: auto;
 }
 
 .menu-logout:hover {
     color: var(--red);
-    background: rgba(255,68,68,0.06);
+    background: rgba(255, 116, 116, 0.05);
 }
 
 .sidebar-user {
@@ -294,9 +273,7 @@ nav {
     padding: 12px 14px;
     border-radius: 14px;
     background: var(--bg-deep);
-    box-shadow:
-        inset 3px 3px 7px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light);
+    border: 1px solid var(--border);
 }
 
 .sidebar-avatar {
@@ -371,16 +348,13 @@ TOPBAR
 .mobile-menu-btn {
     display: none;
     background: var(--bg-card);
-    border: none;
+    border: 1px solid var(--border);
     color: var(--text);
     font-size: 20px;
     width: 44px;
     height: 44px;
     border-radius: 12px;
     cursor: pointer;
-    box-shadow:
-        4px 4px 10px var(--neo-shadow-dark),
-        -2px -2px 6px var(--neo-shadow-light);
     align-items: center;
     justify-content: center;
 }
@@ -403,20 +377,14 @@ SEARCH BOX
     font-size: 14px;
     font-family: var(--font-body);
     outline: none;
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light);
-    transition: all 0.25s;
+    transition: all 0.3s ease;
 }
 
 .search-box input::placeholder { color: var(--muted); }
 
 .search-box input:focus {
-    border-color: rgba(0,212,255,0.3);
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light),
-        0 0 0 2px rgba(0,212,255,0.1);
+    border-color: var(--accent);
+    background: var(--bg-card);
 }
 
 .search-icon {
@@ -460,9 +428,7 @@ TRADING SECTION
     background: var(--bg-card);
     border-radius: 22px;
     padding: 6px;
-    box-shadow:
-        8px 8px 20px var(--neo-shadow-dark),
-        -4px -4px 12px var(--neo-shadow-light);
+    border: 1px solid var(--border);
     overflow: hidden;
 }
 
@@ -488,9 +454,7 @@ FEAR & GREED
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow:
-        8px 8px 20px var(--neo-shadow-dark),
-        -4px -4px 12px var(--neo-shadow-light);
+    border: 1px solid var(--border);
     flex-wrap: wrap;
     gap: 20px;
 }
@@ -533,7 +497,7 @@ FEAR & GREED
     fill: none;
     stroke-width: 8;
     stroke-linecap: round;
-    transition: stroke-dashoffset 1s ease;
+    transition: stroke-dashoffset 1s ease-out;
 }
 
 .fear-value {
@@ -566,9 +530,7 @@ MARKET MOVERS
     background: var(--bg-card);
     border-radius: 22px;
     padding: 24px;
-    box-shadow:
-        8px 8px 20px var(--neo-shadow-dark),
-        -4px -4px 12px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .movers-title {
@@ -586,18 +548,14 @@ MARKET MOVERS
     padding: 12px 14px;
     border-radius: 14px;
     margin-bottom: 8px;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     background: var(--bg-deep);
-    box-shadow:
-        inset 2px 2px 6px var(--neo-inset-dark),
-        inset -1px -1px 3px var(--neo-inset-light);
+    border: 1px solid var(--border);
 }
 
 .mover-item:hover {
-    background: rgba(0,212,255,0.04);
-    box-shadow:
-        3px 3px 8px var(--neo-shadow-dark),
-        -1px -1px 4px var(--neo-shadow-light);
+    background: rgba(100, 181, 246, 0.03);
+    border-color: rgba(100, 181, 246, 0.2);
 }
 
 .mover-item img {
@@ -631,12 +589,9 @@ CRYPTO CARD
     display: flex;
     flex-direction: column;
     gap: 14px;
-    box-shadow:
-        8px 8px 20px var(--neo-shadow-dark),
-        -4px -4px 12px var(--neo-shadow-light);
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid var(--border);
+    transition: all 0.35s ease;
     cursor: pointer;
-    border: 1px solid transparent;
     position: relative;
     overflow: hidden;
 }
@@ -646,17 +601,14 @@ CRYPTO CARD
     position: absolute;
     inset: 0;
     border-radius: 22px;
-    background: linear-gradient(135deg, rgba(0,212,255,0.03), transparent);
+    background: linear-gradient(135deg, rgba(100, 181, 246, 0.03), transparent);
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.35s ease;
 }
 
 .crypto-card:hover {
-    box-shadow:
-        12px 12px 28px var(--neo-shadow-dark),
-        -6px -6px 16px var(--neo-shadow-light);
-    transform: translateY(-3px);
-    border-color: rgba(0,212,255,0.12);
+    transform: translateY(-2px);
+    border-color: var(--accent);
 }
 
 .crypto-card:hover::before { opacity: 1; }
@@ -678,9 +630,7 @@ CRYPTO CARD
     height: 42px;
     border-radius: 50%;
     object-fit: cover;
-    box-shadow:
-        3px 3px 8px var(--neo-shadow-dark),
-        -1px -1px 4px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .coin-name {
@@ -706,51 +656,41 @@ CRYPTO CARD
     height: 34px;
     border-radius: 10px;
     background: var(--bg-deep);
-    border: none;
+    border: 1px solid var(--border);
     cursor: pointer;
     font-size: 16px;
     color: var(--muted);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow:
-        3px 3px 7px var(--neo-shadow-dark),
-        -1px -1px 4px var(--neo-shadow-light);
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
-.favorite-btn:hover { color: var(--yellow); }
+.favorite-btn:hover { color: var(--yellow); border-color: rgba(255, 213, 79, 0.3); }
 .favorite-btn.active-favorite {
     color: var(--yellow);
-    box-shadow:
-        inset 2px 2px 5px var(--neo-inset-dark),
-        inset -1px -1px 3px var(--neo-inset-light);
+    background: rgba(255, 213, 79, 0.05);
+    border-color: rgba(255, 213, 79, 0.2);
 }
 
 .portfolio-btn {
     width: 34px;
     height: 34px;
     border-radius: 10px;
-    background: rgba(0,212,255,0.1);
-    border: none;
+    background: rgba(100, 181, 246, 0.08);
+    border: 1px solid rgba(100, 181, 246, 0.2);
     cursor: pointer;
     font-size: 18px;
     color: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow:
-        3px 3px 7px var(--neo-shadow-dark),
-        -1px -1px 4px var(--neo-shadow-light);
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     font-weight: 700;
 }
 
 .portfolio-btn:hover {
-    background: rgba(0,212,255,0.18);
-    box-shadow:
-        inset 2px 2px 5px var(--neo-inset-dark),
-        inset -1px -1px 3px var(--neo-inset-light);
+    background: rgba(100, 181, 246, 0.15);
 }
 
 .rank-badge {
@@ -763,9 +703,7 @@ CRYPTO CARD
     padding: 4px 10px;
     border-radius: 8px;
     letter-spacing: 0.5px;
-    box-shadow:
-        inset 2px 2px 5px var(--neo-inset-dark),
-        inset -1px -1px 3px var(--neo-inset-light);
+    border: 1px solid var(--border);
 }
 
 .coin-price-area {
@@ -808,8 +746,8 @@ PORTFOLIO MODAL
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(8px);
+    background: rgba(14, 16, 20, 0.8);
+    backdrop-filter: blur(4px);
     z-index: 9000;
     align-items: center;
     justify-content: center;
@@ -822,14 +760,12 @@ PORTFOLIO MODAL
     padding: 36px;
     width: 100%;
     max-width: 440px;
-    box-shadow:
-        16px 16px 40px rgba(0,0,0,0.7),
-        -8px -8px 20px rgba(255,255,255,0.03);
-    animation: modalIn 0.3s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid var(--border);
+    animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
@@ -848,9 +784,7 @@ PORTFOLIO MODAL
     border-radius: 14px;
     background: var(--bg-deep);
     margin-bottom: 24px;
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light);
+    border: 1px solid var(--border);
 }
 
 .portfolio-input {
@@ -864,20 +798,14 @@ PORTFOLIO MODAL
     font-family: var(--font-body);
     outline: none;
     margin-bottom: 16px;
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light);
-    transition: all 0.25s;
+    transition: all 0.3s ease;
 }
 
 .portfolio-input::placeholder { color: var(--muted); }
 
 .portfolio-input:focus {
-    border-color: rgba(0,212,255,0.3);
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light),
-        0 0 0 2px rgba(0,212,255,0.1);
+    border-color: var(--accent);
+    background: var(--bg-card);
 }
 
 .modal-label {
@@ -906,40 +834,29 @@ PORTFOLIO MODAL
     font-weight: 700;
     font-family: var(--font-body);
     cursor: pointer;
-    box-shadow:
-        4px 4px 12px rgba(0,212,255,0.25),
-        -2px -2px 6px rgba(0,212,255,0.05);
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .save-btn:hover {
-    background: #00bde0;
-    box-shadow:
-        6px 6px 16px rgba(0,212,255,0.35),
-        -3px -3px 8px rgba(0,212,255,0.08);
+    background: #73bff7;
 }
 
 .close-btn {
     padding: 14px 20px;
     border-radius: 14px;
     background: var(--bg-deep);
-    border: none;
+    border: 1px solid var(--border);
     color: var(--muted);
     font-size: 15px;
     font-weight: 600;
     font-family: var(--font-body);
     cursor: pointer;
-    box-shadow:
-        4px 4px 10px var(--neo-shadow-dark),
-        -2px -2px 6px var(--neo-shadow-light);
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .close-btn:hover {
     color: var(--text);
-    box-shadow:
-        2px 2px 6px var(--neo-shadow-dark),
-        -1px -1px 3px var(--neo-shadow-light);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* ===================================
@@ -962,10 +879,7 @@ TOAST
     font-size: 14px;
     font-weight: 500;
     min-width: 220px;
-    box-shadow:
-        6px 6px 16px rgba(0,0,0,0.5),
-        -3px -3px 8px rgba(255,255,255,0.04);
-    animation: toastIn 0.3s ease;
+    animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -977,20 +891,20 @@ TOAST
 }
 
 .toast-success {
-    background: rgba(0,230,118,0.12);
-    border: 1px solid rgba(0,230,118,0.25);
+    background: rgba(105, 240, 174, 0.1);
+    border: 1px solid rgba(105, 240, 174, 0.3);
     color: var(--green);
 }
 
 .toast-error {
-    background: rgba(255,68,68,0.12);
-    border: 1px solid rgba(255,68,68,0.25);
+    background: rgba(255, 116, 116, 0.1);
+    border: 1px solid rgba(255, 116, 116, 0.3);
     color: var(--red);
 }
 
 .toast-info {
-    background: rgba(0,212,255,0.12);
-    border: 1px solid rgba(0,212,255,0.25);
+    background: rgba(100, 181, 246, 0.1);
+    border: 1px solid rgba(100, 181, 246, 0.3);
     color: var(--accent);
 }
 
@@ -1036,9 +950,7 @@ COIN PAGE
     height: 64px;
     border-radius: 50%;
     object-fit: cover;
-    box-shadow:
-        6px 6px 16px var(--neo-shadow-dark),
-        -3px -3px 8px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .coin-hero-name {
@@ -1066,9 +978,7 @@ COIN PAGE
     background: var(--bg-card);
     border-radius: 20px;
     padding: 22px;
-    box-shadow:
-        6px 6px 16px var(--neo-shadow-dark),
-        -3px -3px 8px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .stat-label {
@@ -1112,20 +1022,17 @@ PORTFOLIO PAGE
     padding: 12px 20px;
     border-radius: 14px;
     background: var(--bg-card);
+    border: 1px solid var(--border);
     color: var(--accent);
     font-size: 14px;
     font-weight: 600;
-    box-shadow:
-        4px 4px 10px var(--neo-shadow-dark),
-        -2px -2px 6px var(--neo-shadow-light);
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .back-btn:hover {
-    box-shadow:
-        2px 2px 6px var(--neo-shadow-dark),
-        -1px -1px 3px var(--neo-shadow-light);
-    transform: translateY(1px);
+    background: var(--bg-deep);
+    border-color: var(--accent);
+    transform: translateY(-1px);
 }
 
 .portfolio-stats {
@@ -1139,9 +1046,7 @@ PORTFOLIO PAGE
     background: var(--bg-card);
     border-radius: 20px;
     padding: 24px;
-    box-shadow:
-        6px 6px 16px var(--neo-shadow-dark),
-        -3px -3px 8px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .portfolio-stat-label {
@@ -1167,9 +1072,7 @@ TABLE
     background: var(--bg-card);
     border-radius: 22px;
     overflow: hidden;
-    box-shadow:
-        8px 8px 20px var(--neo-shadow-dark),
-        -4px -4px 12px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .croin-table {
@@ -1193,11 +1096,11 @@ TABLE
 
 .croin-table tbody tr {
     border-top: 1px solid var(--border);
-    transition: background 0.15s;
+    transition: background 0.25s ease;
 }
 
 .croin-table tbody tr:hover {
-    background: rgba(0,212,255,0.03);
+    background: rgba(100, 181, 246, 0.04);
 }
 
 .croin-table td {
@@ -1208,19 +1111,18 @@ TABLE
 .remove-btn {
     padding: 8px 16px;
     border-radius: 10px;
-    background: rgba(255,68,68,0.08);
-    border: 1px solid rgba(255,68,68,0.15);
+    background: rgba(255, 116, 116, 0.05);
+    border: 1px solid rgba(255, 116, 116, 0.2);
     color: var(--red);
     font-size: 13px;
     font-weight: 600;
     font-family: var(--font-body);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .remove-btn:hover {
-    background: rgba(255,68,68,0.15);
-    box-shadow: 0 0 12px rgba(255,68,68,0.15);
+    background: rgba(255, 116, 116, 0.15);
 }
 
 /* ===================================
@@ -1237,20 +1139,16 @@ WATCHLIST PAGE
     background: var(--bg-card);
     border-radius: 20px;
     padding: 22px;
-    box-shadow:
-        6px 6px 16px var(--neo-shadow-dark),
-        -3px -3px 8px var(--neo-shadow-light);
+    border: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    transition: all 0.25s;
+    transition: all 0.3s ease;
 }
 
 .watchlist-card:hover {
-    box-shadow:
-        10px 10px 24px var(--neo-shadow-dark),
-        -5px -5px 14px var(--neo-shadow-light);
+    border-color: var(--accent);
     transform: translateY(-2px);
 }
 
@@ -1277,7 +1175,7 @@ AUTH PAGES
     transform: translateX(-50%);
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(100, 181, 246, 0.05) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -1287,9 +1185,7 @@ AUTH PAGES
     padding: 44px;
     width: 100%;
     max-width: 420px;
-    box-shadow:
-        16px 16px 40px var(--neo-shadow-dark),
-        -8px -8px 20px var(--neo-shadow-light);
+    border: 1px solid var(--border);
 }
 
 .auth-logo {
@@ -1298,7 +1194,6 @@ AUTH PAGES
     font-weight: 800;
     color: var(--accent);
     letter-spacing: 5px;
-    text-shadow: 0 0 30px rgba(0,212,255,0.4);
     text-align: center;
 }
 
@@ -1331,20 +1226,14 @@ AUTH PAGES
     font-family: var(--font-body);
     outline: none;
     margin-bottom: 20px;
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light);
-    transition: all 0.25s;
+    transition: all 0.3s ease;
 }
 
 .auth-input::placeholder { color: var(--muted); }
 
 .auth-input:focus {
-    border-color: rgba(0,212,255,0.3);
-    box-shadow:
-        inset 3px 3px 8px var(--neo-inset-dark),
-        inset -1px -1px 4px var(--neo-inset-light),
-        0 0 0 2px rgba(0,212,255,0.1);
+    border-color: var(--accent);
+    background: var(--bg-card);
 }
 
 .auth-btn {
@@ -1358,19 +1247,13 @@ AUTH PAGES
     font-weight: 700;
     font-family: var(--font-body);
     cursor: pointer;
-    box-shadow:
-        4px 4px 14px rgba(0,212,255,0.3),
-        -2px -2px 6px rgba(0,212,255,0.05);
-    transition: all 0.25s;
+    transition: all 0.3s ease;
     letter-spacing: 0.5px;
     margin-top: 8px;
 }
 
 .auth-btn:hover {
-    background: #00bde0;
-    box-shadow:
-        6px 6px 18px rgba(0,212,255,0.4),
-        -3px -3px 8px rgba(0,212,255,0.08);
+    background: #73bff7;
     transform: translateY(-1px);
 }
 
@@ -1387,9 +1270,9 @@ AUTH PAGES
 }
 
 .auth-error {
-    background: rgba(255,68,68,0.08);
-    border: 1px solid rgba(255,68,68,0.2);
-    color: #ff8080;
+    background: rgba(255, 116, 116, 0.06);
+    border: 1px solid rgba(255, 116, 116, 0.2);
+    color: #ffa1a1;
     padding: 12px 16px;
     border-radius: 12px;
     font-size: 14px;
@@ -1404,8 +1287,8 @@ INDICATOR / LIVE BADGE
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(0,230,118,0.1);
-    border: 1px solid rgba(0,230,118,0.2);
+    background: rgba(105, 240, 174, 0.08);
+    border: 1px solid rgba(105, 240, 174, 0.2);
     color: var(--green);
     font-size: 11px;
     font-weight: 600;
@@ -1419,12 +1302,12 @@ INDICATOR / LIVE BADGE
     height: 6px;
     border-radius: 50%;
     background: var(--green);
-    animation: blink 1.5s ease-in-out infinite;
+    animation: blink 2s ease-in-out infinite;
 }
 
 @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
+    50% { opacity: 0.3; }
 }
 
 /* ===================================

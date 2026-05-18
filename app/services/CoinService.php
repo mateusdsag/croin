@@ -1,6 +1,7 @@
 <?php
 
-class CoinService {
+class CoinService
+{
 
     /*
     ====================================================
@@ -8,7 +9,8 @@ class CoinService {
     ====================================================
     */
 
-    private static function request($url){
+    private static function request($url)
+    {
 
         $context = stream_context_create([
 
@@ -17,10 +19,10 @@ class CoinService {
                 'method' => 'GET',
 
                 'header' =>
-                    "User-Agent: Mozilla/5.0\r\n" .
+                "User-Agent: Mozilla/5.0\r\n" .
                     "Accept: application/json\r\n",
 
-                'timeout' => 15
+                'timeout' => 5
 
             ]
 
@@ -32,14 +34,14 @@ class CoinService {
             $context
         );
 
-        if($response === false){
+        if ($response === false) {
 
             return null;
         }
 
         $data = json_decode($response, true);
 
-        if(json_last_error() !== JSON_ERROR_NONE){
+        if (json_last_error() !== JSON_ERROR_NONE) {
 
             return null;
         }
@@ -53,11 +55,12 @@ class CoinService {
     ====================================================
     */
 
-    public static function getMarketData(){
+    public static function getMarketData()
+    {
 
         $url = "https://api.coingecko.com/api/v3/coins/markets?" .
-               "vs_currency=usd&order=market_cap_desc" .
-               "&per_page=20&page=1&sparkline=false";
+            "vs_currency=usd&order=market_cap_desc" .
+            "&per_page=100&page=1&sparkline=false";
 
         $data = self::request($url);
 
@@ -67,14 +70,14 @@ class CoinService {
         ====================================================
         */
 
-        if(!$data || !is_array($data)){
+        if (!$data || !is_array($data)) {
 
             return self::fallbackCoins();
         }
 
         $coins = [];
 
-        foreach($data as $coin){
+        foreach ($data as $coin) {
 
             /*
             ================================================
@@ -82,10 +85,10 @@ class CoinService {
             ================================================
             */
 
-            if(
+            if (
                 !isset($coin['name']) ||
                 !isset($coin['symbol'])
-            ){
+            ) {
                 continue;
             }
 
@@ -135,7 +138,7 @@ class CoinService {
         ====================================================
         */
 
-        if(empty($coins)){
+        if (empty($coins)) {
 
             return self::fallbackCoins();
         }
@@ -149,7 +152,8 @@ class CoinService {
     ====================================================
     */
 
-    private static function fallbackCoins(){
+    private static function fallbackCoins()
+    {
 
         return [
 
@@ -165,7 +169,7 @@ class CoinService {
                 'ath' => 0,
                 'supply' => 0,
                 'image' =>
-                    'https://assets.coingecko.com/coins/images/1/large/bitcoin.png'
+                'https://assets.coingecko.com/coins/images/1/large/bitcoin.png'
 
             ],
 
@@ -181,7 +185,7 @@ class CoinService {
                 'ath' => 0,
                 'supply' => 0,
                 'image' =>
-                    'https://assets.coingecko.com/coins/images/279/large/ethereum.png'
+                'https://assets.coingecko.com/coins/images/279/large/ethereum.png'
 
             ],
 
@@ -197,7 +201,7 @@ class CoinService {
                 'ath' => 0,
                 'supply' => 0,
                 'image' =>
-                    'https://assets.coingecko.com/coins/images/4128/large/solana.png'
+                'https://assets.coingecko.com/coins/images/4128/large/solana.png'
 
             ]
 
