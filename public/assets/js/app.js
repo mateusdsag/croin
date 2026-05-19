@@ -1,105 +1,31 @@
 /*
-==================================================
-CROIN - APP.JS
-URL dinâmica baseada no location atual
-==================================================
-*/
+ * CROIN PRO — app.js
+ * Global JS: coin updates, search, watchlist, portfolio modal, toast, mobile nav
+ */
+
+/* ============================================================
+   BASE URL
+   ============================================================ */
 
 const BASE_URL = (() => {
     const { origin, pathname } = window.location;
-    // Remove tudo depois de /public/ ou /public
     const match = pathname.match(/^(.*\/public)\/?/);
     return match ? origin + match[1] : origin;
 })();
 
-/*
-==================================================
-LOADER
-==================================================
-*/
+/* ============================================================
+   LOADER
+   ============================================================ */
 
 window.addEventListener('load', () => {
     setTimeout(() => {
-        const loader = document.getElementById('loader');
-        if (loader) loader.classList.add('hidden');
-    }, 6);
+        document.getElementById('loader')?.classList.add('hidden');
+    }, 50);
 });
 
-/*
-==================================================
-ATUALIZAR MOEDAS
-==================================================
-*/
-
-async function updateCoins() {
-    try {
-        const response = await fetch(`${BASE_URL}/api/coin.php`);
-        if (!response.ok) return;
-        const coins = await response.json();
-
-        const coinGrid = document.getElementById('coinGrid');
-        if (!coinGrid || !Array.isArray(coins)) return;
-
-        // Preservar search
-        const searchVal = document.getElementById('searchInput')?.value?.toLowerCase() || '';
-
-        coinGrid.innerHTML = '';
-
-        coins.forEach((coin) => {
-            const card = document.createElement('a');
-            card.href = `?page=coin&symbol=${coin.symbol.toLowerCase()}`;
-            card.className = 'crypto-card coin-item';
-            card.dataset.name = coin.name.toLowerCase();
-            card.dataset.symbol = coin.symbol.toLowerCase();
-
-            const isPos = Number(coin.change) >= 0;
-            const changeClass = isPos ? 'positive' : 'negative';
-            const changePrefix = isPos ? '+' : '';
-
-            card.innerHTML = `
-<div class="coin-top">
-    <div class="coin-info">
-        <img src="${escHtml(coin.image)}" class="coin-image" alt="${escHtml(coin.name)}" onerror="this.src='https://via.placeholder.com/42/131920/22d3ee?text=${escHtml(coin.symbol)}'">
-        <div>
-            <h3 class="coin-name">${escHtml(coin.name)}</h3>
-            <p class="coin-symbol">${escHtml(coin.symbol)}</p>
-        </div>
-    </div>
-    <div class="coin-actions">
-        <button class="favorite-btn" title="Watchlist"
-            onclick="event.preventDefault(); event.stopPropagation(); addToWatchlist('${escHtml(coin.symbol)}','${escHtml(coin.name)}',this)">★</button>
-        <button class="portfolio-btn" title="Adicionar ao Portfolio"
-            onclick="event.preventDefault(); event.stopPropagation(); openPortfolioModal('${escHtml(coin.symbol)}','${escHtml(coin.name)}','${coin.price}')">+</button>
-    </div>
-</div>
-<div class="rank-badge">#${coin.rank}</div>
-<div class="coin-price-area">
-    <h2 class="coin-price">$${fmtPrice(coin.price)}</h2>
-    <p class="${changeClass}">${changePrefix}${Number(coin.change).toFixed(2)}%</p>
-</div>
-<div class="coin-stats">
-    <p class="market-cap"><span>Market Cap</span><span>$${fmtCompact(coin.market_cap)}</span></p>
-    <p class="market-volume"><span>Volume 24h</span><span>$${fmtCompact(coin.volume)}</span></p>
-</div>`;
-
-            // Ocultar se não passar no filtro
-            if (searchVal && !coin.name.toLowerCase().includes(searchVal) && !coin.symbol.toLowerCase().includes(searchVal)) {
-                card.style.display = 'none';
-            }
-
-            coinGrid.appendChild(card);
-        });
-
-    } catch (err) {
-        console.error('[CROIN] updateCoins:', err);
-    }
-}
-
-/*
-==================================================
-UTILITÁRIOS DE FORMATAÇÃO
-==================================================
-*/
+/* ============================================================
+   FORMAT HELPERS
+   ============================================================ */
 
 function fmtPrice(val) {
     const n = Number(val);
@@ -111,13 +37,13 @@ function fmtPrice(val) {
 function fmtCompact(val) {
     const n = Number(val);
     if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
-    if (n >= 1e9)  return (n / 1e9).toFixed(2) + 'B';
-    if (n >= 1e6)  return (n / 1e6).toFixed(2) + 'M';
+    if (n >= 1e9)  return (n / 1e9).toFixed(2)  + 'B';
+    if (n >= 1e6)  return (n / 1e6).toFixed(2)  + 'M';
     return n.toLocaleString('en-US');
 }
 
 function escHtml(str) {
-    return String(str)
+    return String(str ?? '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -125,62 +51,119 @@ function escHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
-/*
-==================================================
-AUTO UPDATE (15s)
-==================================================
-*/
+/* ============================================================
+   COIN GRID UPDATE
+   ============================================================ */
+
+async function updateCoins() {
+    try {
+        const res = await fetch(`${BASE_URL}/api/coin.php`);
+        if (!res.ok) return;
+        const coins = await res.json();
+
+        const grid = document.getElementById('coinGrid');
+        if (!grid || !Array.isArray(coins)) return;
+
+        const searchVal = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+
+        grid.innerHTML = '';
+
+        coins.forEach(coin => {
+            const isPos   = Number(coin.change) >= 0;
+            const pctCls  = isPos ? 'positive' : 'negative';
+            const pctPfx  = isPos ? '+' : '';
+            const symbol  = (coin.symbol ?? '').toUpperCase();
+
+            const card = document.createElement('a');
+            card.href        = `?page=coin&symbol=${coin.symbol.toLowerCase()}`;
+            card.className   = 'crypto-card coin-item';
+            card.dataset.name   = (coin.name ?? '').toLowerCase();
+            card.dataset.symbol = coin.symbol.toLowerCase();
+
+            card.innerHTML = `
+<div class="coin-top">
+    <div class="coin-info">
+        <img src="${escHtml(coin.image)}"
+             class="coin-image" alt="${escHtml(coin.name)}"
+             loading="lazy"
+             onerror="this.src='https://via.placeholder.com/40/111520/0066FF?text=${symbol}'">
+        <div>
+            <div class="coin-name">${escHtml(coin.name)}</div>
+            <div class="coin-symbol">${symbol}</div>
+        </div>
+    </div>
+    <div class="coin-actions" onclick="event.preventDefault()">
+        <button class="favorite-btn" title="Watchlist"
+                onclick="addToWatchlist('${escHtml(coin.symbol)}','${escHtml(coin.name)}',this)">★</button>
+        <button class="portfolio-btn" title="Portfolio"
+                onclick="openPortfolioModal('${escHtml(coin.symbol)}','${escHtml(coin.name)}','${coin.price}')">+</button>
+    </div>
+</div>
+${coin.rank ? `<div class="rank-badge">#${coin.rank}</div>` : ''}
+<div class="coin-price-area">
+    <div class="coin-price">$${fmtPrice(coin.price)}</div>
+    <div class="${pctCls}">${pctPfx}${Number(coin.change).toFixed(2)}%</div>
+</div>
+${(coin.market_cap || coin.volume) ? `
+<div class="coin-stats">
+    ${coin.market_cap ? `<div class="market-cap"><span>Market Cap</span><span>$${fmtCompact(coin.market_cap)}</span></div>` : ''}
+    ${coin.volume ? `<div class="market-volume"><span>Volume 24h</span><span>$${fmtCompact(coin.volume)}</span></div>` : ''}
+</div>` : ''}`;
+
+            if (searchVal && !card.dataset.name.includes(searchVal) && !card.dataset.symbol.includes(searchVal)) {
+                card.style.display = 'none';
+            }
+
+            grid.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error('[CROIN] updateCoins:', err);
+    }
+}
+
+/* ============================================================
+   AUTO UPDATE (15s)
+   ============================================================ */
 
 updateCoins();
 setInterval(updateCoins, 15000);
 
-/*
-==================================================
-SEARCH
-==================================================
-*/
+/* ============================================================
+   SEARCH
+   ============================================================ */
 
-const searchInput = document.getElementById('searchInput');
-
-if (searchInput) {
-    searchInput.addEventListener('input', function () {
-        const val = this.value.toLowerCase().trim();
-        document.querySelectorAll('.coin-item').forEach((card) => {
-            const match = card.dataset.name?.includes(val) || card.dataset.symbol?.includes(val);
-            card.style.display = match ? '' : 'none';
-        });
+document.getElementById('searchInput')?.addEventListener('input', function () {
+    const val = this.value.toLowerCase().trim();
+    document.querySelectorAll('.coin-item').forEach(card => {
+        const match = !val
+            || card.dataset.name?.includes(val)
+            || card.dataset.symbol?.includes(val);
+        card.style.display = match ? '' : 'none';
     });
-}
+});
 
-/*
-==================================================
-MENU MOBILE
-==================================================
-*/
+/* ============================================================
+   MOBILE SIDEBAR
+   ============================================================ */
 
-const menuToggle = document.getElementById('menu-toggle');
-const sidebar = document.querySelector('.sidebar');
-const overlay = document.getElementById('sidebarOverlay');
+const _menuToggle = document.getElementById('menu-toggle');
+const _sidebar    = document.querySelector('.sidebar');
+const _overlay    = document.getElementById('sidebarOverlay');
 
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
-        sidebar?.classList.toggle('active');
-        overlay?.classList.toggle('active');
-    });
-}
+_menuToggle?.addEventListener('click', () => {
+    _sidebar?.classList.toggle('active');
+    if (_overlay) _overlay.style.display = _sidebar?.classList.contains('active') ? 'block' : 'none';
+});
 
-if (overlay) {
-    overlay.addEventListener('click', () => {
-        sidebar?.classList.remove('active');
-        overlay?.classList.remove('active');
-    });
-}
+window.closeSidebar = function () {
+    _sidebar?.classList.remove('active');
+    if (_overlay) _overlay.style.display = 'none';
+};
 
-/*
-==================================================
-WATCHLIST
-==================================================
-*/
+/* ============================================================
+   WATCHLIST
+   ============================================================ */
 
 async function addToWatchlist(symbol, name, button) {
     button.disabled = true;
@@ -189,81 +172,67 @@ async function addToWatchlist(symbol, name, button) {
         fd.append('action', 'add');
         fd.append('symbol', symbol);
         fd.append('name', name);
-
-        const res = await fetch(`${BASE_URL}/api/watchlist.php`, { method: 'POST', body: fd });
+        const res  = await fetch(`${BASE_URL}/api/watchlist.php`, { method: 'POST', body: fd });
         const data = await res.json();
-
         if (data.success) {
             button.classList.add('active-favorite');
-            showToast('★ ' + name + ' adicionado à watchlist', 'success');
+            showToast(`★ ${name} adicionado à watchlist`, 'success');
         } else {
             showToast(data.message || 'Erro ao adicionar', 'error');
         }
-    } catch (err) {
-        console.error('[CROIN] watchlist:', err);
+    } catch {
         showToast('Erro de conexão', 'error');
     } finally {
         setTimeout(() => { button.disabled = false; }, 1500);
     }
 }
 
-/*
-==================================================
-PORTFOLIO MODAL
-==================================================
-*/
+/* ============================================================
+   PORTFOLIO MODAL
+   ============================================================ */
 
-function openPortfolioModal(symbol, name, price) {
+window.openPortfolioModal = function (symbol, name, price) {
     const modal = document.getElementById('portfolioModal');
     if (!modal) return;
     document.getElementById('portfolioSymbol').value = symbol;
-    document.getElementById('portfolioName').value = name;
-    document.getElementById('portfolioPrice').value = price;
-
-    const coinLabel = document.getElementById('modalCoinLabel');
-    if (coinLabel) coinLabel.textContent = `${name} (${symbol})`;
-
+    document.getElementById('portfolioName').value   = name;
+    document.getElementById('portfolioPrice').value  = price;
+    const label = document.getElementById('modalCoinLabel');
+    if (label) label.textContent = `${name} (${symbol})`;
     modal.style.display = 'flex';
-    document.getElementById('portfolioQuantity')?.focus();
-}
+    setTimeout(() => document.getElementById('portfolioQuantity')?.focus(), 50);
+};
 
-function closePortfolioModal() {
+window.closePortfolioModal = function () {
     const modal = document.getElementById('portfolioModal');
     if (modal) modal.style.display = 'none';
-    document.getElementById('portfolioQuantity').value = '';
-}
+    const qty = document.getElementById('portfolioQuantity');
+    if (qty) qty.value = '';
+};
 
-// Fechar modal clicando fora
-document.addEventListener('click', (e) => {
+// Close on backdrop click
+document.addEventListener('click', e => {
     const modal = document.getElementById('portfolioModal');
     if (modal && e.target === modal) closePortfolioModal();
 });
 
-// Fechar com ESC
-document.addEventListener('keydown', (e) => {
+// Close on ESC
+document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closePortfolioModal();
 });
 
-/*
-==================================================
-SALVAR PORTFOLIO
-==================================================
-*/
+/* ============================================================
+   SAVE PORTFOLIO
+   ============================================================ */
 
-async function savePortfolio() {
+window.savePortfolio = async function () {
     const symbol   = document.getElementById('portfolioSymbol')?.value;
     const name     = document.getElementById('portfolioName')?.value;
     const quantity = document.getElementById('portfolioQuantity')?.value;
     const price    = document.getElementById('portfolioPrice')?.value;
 
-    if (!quantity || quantity <= 0) {
-        showToast('Informe uma quantidade válida', 'error');
-        return;
-    }
-    if (!price || price <= 0) {
-        showToast('Informe um preço válido', 'error');
-        return;
-    }
+    if (!quantity || Number(quantity) <= 0) { showToast('Quantidade inválida', 'error'); return; }
+    if (!price    || Number(price) <= 0)    { showToast('Preço inválido', 'error'); return; }
 
     const saveBtn = document.querySelector('.save-btn');
     if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Salvando...'; }
@@ -276,43 +245,40 @@ async function savePortfolio() {
         fd.append('quantity', quantity);
         fd.append('buy_price', price);
 
-        const res = await fetch(`${BASE_URL}/api/portfolio.php`, { method: 'POST', body: fd });
+        const res  = await fetch(`${BASE_URL}/api/portfolio.php`, { method: 'POST', body: fd });
         const data = await res.json();
 
         if (data.success) {
-            showToast('✓ ' + name + ' adicionado ao portfolio', 'success');
+            showToast(`✓ ${name} adicionado ao portfolio`, 'success');
             closePortfolioModal();
         } else {
             showToast(data.message || 'Erro ao salvar', 'error');
         }
-    } catch (err) {
-        console.error('[CROIN] portfolio:', err);
+    } catch {
         showToast('Erro de conexão', 'error');
     } finally {
         if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; }
     }
-}
+};
 
-/*
-==================================================
-TOAST
-==================================================
-*/
+/* ============================================================
+   TOAST
+   ============================================================ */
 
-function showToast(message, type = 'info') {
+window.showToast = function (message, type = 'info') {
     const container = document.getElementById('toastContainer');
     if (!container) return;
 
     const icons = { success: '✓', error: '✕', info: 'ℹ' };
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    toast.innerHTML = `<span>${icons[type] || ''}</span><span>${message}</span>`;
+    toast.innerHTML = `<span>${icons[type] || ''}</span><span>${escHtml(message)}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(30px)';
-        toast.style.transition = 'all 0.3s';
+        toast.style.transition = 'opacity 0.3s, transform 0.3s';
+        toast.style.opacity    = '0';
+        toast.style.transform  = 'translateX(20px) scale(0.96)';
         setTimeout(() => toast.remove(), 300);
     }, 3500);
-}
+};
